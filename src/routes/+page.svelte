@@ -1,13 +1,12 @@
 <script lang="ts">
-    let roomId = "";
-    let username = "";
+    import { goto } from "$app/navigation";
+
+    function createRoom() {
+        goto(`/${Date.now()}`);
+    }
 </script>
 
 <main>
     <h1>Pointing Poker</h1>
-    <div>
-        <input bind:value={roomId} placeholder="Room ID" />
-        <input bind:value={username} placeholder="Your Name" />
-        <!-- <button on:click={joinRoom}>Join Room</button> -->
-    </div>
+    <button onclick={createRoom}>Create a room</button>
 </main>

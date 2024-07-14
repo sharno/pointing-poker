@@ -35,6 +35,8 @@
         (nums.reduce((acc, b) => acc + b, 0) / votes.length).toFixed(2),
     );
     const median: string = $derived.by(() => {
+        if (nums.length === 0) return "NaN";
+        if (nums.length === 1) return nums[0].toString();
         const mid = Math.floor(nums.length / 2);
         return ((nums[mid - 1] + nums[mid]) / 2).toFixed(2);
     });
@@ -108,52 +110,51 @@
 
 <div>
     <h2>Room: {roomId}</h2>
-    <div>
-        {#if username === ""}
-            <form onsubmit={setUsername}>
-                <label for="username">username:</label>
-                <input id="username" bind:value={usernameInput} />
-                <button>Submit</button>
-            </form>
-        {:else}
-            <h2>Username: {username}</h2>
-        {/if}
-    </div>
-    <div>
-        {#each cards as card}
-            <button
-                class:selected={selectedCard === card}
-                onclick={() => (selectedCard = card)}
-            >
-                {card}
-            </button>
-        {/each}
-    </div>
-    <button onclick={castVote}>Cast Vote</button>
-    <button onclick={resetVotes}>Reset Votes</button>
-    <button onclick={showVotes}>Show Votes</button>
+    {#if username === ""}
+        <form onsubmit={setUsername}>
+            <label for="username">username:</label>
+            <input id="username" bind:value={usernameInput} />
+            <button>Submit</button>
+        </form>
+    {:else}
+        <h2>Username: {username}</h2>
 
-    <h3>Votes:</h3>
-    <ul>
-        {#each participants as participant}
-            <li>
-                {participant}:
-                {#if showVotesFlag}
-                    {votes.find((v) => v.username === participant)?.vote ||
-                        "Not voted"}
-                {:else}{votes.some((v) => v.username === participant)
-                        ? "🤫"
-                        : "Not voted"}{/if}
-            </li>
-        {/each}
-    </ul>
-    {#if showVotesFlag}
-        <h3>Average:</h3>
-        <div>{average}</div>
-        <h3>Median:</h3>
-        <div>{median}</div>
-        <h3>Mode:</h3>
-        <div>{mode}</div>
+        <div>
+            {#each cards as card}
+                <button
+                    class:selected={selectedCard === card}
+                    onclick={() => (selectedCard = card)}
+                >
+                    {card}
+                </button>
+            {/each}
+        </div>
+        <button onclick={castVote}>Cast Vote</button>
+        <button onclick={resetVotes}>Reset Votes</button>
+        <button onclick={showVotes}>Show Votes</button>
+
+        <h3>Votes:</h3>
+        <ul>
+            {#each participants as participant}
+                <li>
+                    {participant}:
+                    {#if showVotesFlag}
+                        {votes.find((v) => v.username === participant)?.vote ||
+                            "Not voted"}
+                    {:else}{votes.some((v) => v.username === participant)
+                            ? "🤫"
+                            : "Not voted"}{/if}
+                </li>
+            {/each}
+        </ul>
+        {#if showVotesFlag}
+            <h3>Average:</h3>
+            <div>{average}</div>
+            <h3>Median:</h3>
+            <div>{median}</div>
+            <h3>Mode:</h3>
+            <div>{mode}</div>
+        {/if}
     {/if}
 </div>
 
