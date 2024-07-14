@@ -31,7 +31,7 @@
     }
 
     const nums = $derived(votes.map((v) => parseInt(v.vote)).toSorted());
-    const average: string = $derived(
+    const mean: string = $derived(
         (nums.reduce((acc, b) => acc + b, 0) / votes.length).toFixed(2),
     );
     const median: string = $derived.by(() => {
@@ -119,7 +119,7 @@
     {:else}
         <h2>Username: {username}</h2>
 
-        <div>
+        <div role="group">
             {#each cards as card}
                 <button
                     class:selected={selectedCard === card}
@@ -129,31 +129,59 @@
                 </button>
             {/each}
         </div>
-        <button onclick={castVote}>Cast Vote</button>
-        <button onclick={resetVotes}>Reset Votes</button>
-        <button onclick={showVotes}>Show Votes</button>
+        <div>
+            <button onclick={castVote}>Cast Vote</button>
+            <button class="secondary" onclick={showVotes}>Show Votes</button>
+        </div>
 
         <h3>Votes:</h3>
-        <ul>
-            {#each participants as participant}
-                <li>
-                    {participant}:
-                    {#if showVotesFlag}
-                        {votes.find((v) => v.username === participant)?.vote ||
-                            "Not voted"}
-                    {:else}{votes.some((v) => v.username === participant)
-                            ? "🤫"
-                            : "Not voted"}{/if}
-                </li>
-            {/each}
-        </ul>
+
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col">Participant</th>
+                    <th scope="col">Voting</th>
+                </tr>
+            </thead>
+            <tbody>
+                {#each participants as participant}
+                    <tr>
+                        <td>
+                            {participant}
+                        </td>
+                        <td>
+                            {#if showVotesFlag}
+                                {votes.find((v) => v.username === participant)
+                                    ?.vote || "Not voted"}
+                            {:else}{votes.some(
+                                    (v) => v.username === participant,
+                                )
+                                    ? "🤫"
+                                    : "Not voted"}{/if}
+                        </td>
+                    </tr>
+                {/each}
+            </tbody>
+        </table>
+        <button class="secondary" onclick={resetVotes}>Reset Votes</button>
         {#if showVotesFlag}
-            <h3>Average:</h3>
-            <div>{average}</div>
-            <h3>Median:</h3>
-            <div>{median}</div>
-            <h3>Mode:</h3>
-            <div>{mode}</div>
+            <h2>Stats:</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Mean</th>
+                        <th scope="col">Median</th>
+                        <th scope="col">Mode</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{mean}</td>
+                        <td>{median}</td>
+                        <td>{mode}</td>
+                    </tr>
+                </tbody>
+            </table>
         {/if}
     {/if}
 </div>
